@@ -18,8 +18,7 @@ public class AccountController {
 	// http://localhost:80/account/list
 	@GetMapping({"/list","","/"})
 	public String list() {
-		// return "account/list";
-		throw new CustomPageException("페이지가 없어요", HttpStatus.NOT_FOUND);
+		return "account/list";
 	}
 	
 	// 계좌 생성 페이지
@@ -33,6 +32,7 @@ public class AccountController {
 	// http://localhost:80/account/withdraw
 	@GetMapping("/withdraw")
 	public String withdraw() {
+		String a = "aa";
 		return "account/withdraw";
 	}
 	

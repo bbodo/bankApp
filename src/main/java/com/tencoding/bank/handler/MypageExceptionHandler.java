@@ -1,5 +1,6 @@
 package com.tencoding.bank.handler;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,7 @@ import com.tencoding.bank.handler.exception.CustomPageException;
  */
 
 @ControllerAdvice // Ioc 대상
+@Order(2)
 public class MypageExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)

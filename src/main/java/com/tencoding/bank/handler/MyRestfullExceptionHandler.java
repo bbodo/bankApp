@@ -1,5 +1,6 @@
 package com.tencoding.bank.handler;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -10,7 +11,8 @@ import com.tencoding.bank.handler.exception.CustomRestfullException;
  *  데이터를 가공해서 내려 줄 수 있다.
  *   
  */
-// @RestControllerAdvice // IoC 대상 + Aop 대상
+@RestControllerAdvice // IoC 대상 + Aop 대상
+@Order(1)
 public class MyRestfullExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
