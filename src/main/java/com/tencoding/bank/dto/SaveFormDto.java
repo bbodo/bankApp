@@ -7,7 +7,7 @@ public class SaveFormDto {
 	
 	private String number; 
 	private String password;
-	private long balance;
+	private Long balance;
 	
 	// TODO - 추후 추가 예정
 }

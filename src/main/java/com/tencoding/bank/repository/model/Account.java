@@ -14,17 +14,17 @@ public class Account {
 	private String number;
 	private String password;
 	private Long balance;
-	private Integer userid;
+	private Integer userId;
 	private Timestamp createdAt;
 
 	// 출금 기능
-	public void widhdraw(Long amount) {
+	public void widhdraw(Integer amount) {
 		if (this.balance > amount)
 			this.balance -= amount;
 	}
 
 	// 입금 기능
-	public void deposit(Long amount) {
+	public void deposit(Integer amount) {
 		this.balance += amount;
 	}
 	
