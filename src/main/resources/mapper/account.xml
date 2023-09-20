@@ -29,5 +29,10 @@
 		select * from account_tb 
 	</select>
 	
+	<select id="findByNumber" resultType="com.tencoding.bank.repository.model.Account">
+		select * from account_tb where number = #{number}
+	</select>
+	
+	
 	
 </mapper>

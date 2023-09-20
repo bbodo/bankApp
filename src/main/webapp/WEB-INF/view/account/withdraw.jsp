@@ -8,7 +8,7 @@
 	<h2>출금 페이지(인증)</h2>
 	<h5>어서오세요. 환영합니다.</h5>
 	<div class="bg-light p-md-5 h-75">
-		<form action="">
+		<form action="/account/withdraw" method="post">
 			<div class="form-group">
 				<label for="amount">출금 금액:</label>
 				<input type="text" id="amount" class="form-control"
@@ -24,8 +24,8 @@
 				<input type="password" id="wAccountPassword" class="form-control"
 				placeholder="출금 계좌 비밀번호를 입력하세요" name="wAccountPassword">
 			</div>
+			<button type="submit" class="btn btn-primary">출금</button>
 		</form>
-		<button type="submit" class="btn btn-primary">출금</button>
 	</div>
 </div>
 
