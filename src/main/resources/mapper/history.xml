@@ -3,7 +3,47 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.tencoding.bank.repository.interfaces.HistoryRepository">
-
+	<!-- 동적 쿼리 -->
+	<select id="findByHistoryType" resultType="com.tencoding.bank.dto.HistoryDto">
+		<if test="type == 'deposit' " >
+			select h.id, h.amount, h.d_balance as balance, h.created_at,   
+				   da.number as recevier,
+				   ifnull(wa.number, 'ATM') as sender	
+			from history_tb as h 
+			left join account_tb as da
+			on h.d_account_id = da.id
+			left join account_tb as wa
+			on h.w_account_id = wa.id 
+			where h.d_account_id = #{id};
+		</if>
+		<if test="type == 'withdraw' " >
+			select h.id, h.amount, h.w_balance as balance, h.created_at,
+				   wa.number as sender,
+			       ifnull(da.number, 'ATM') as receiver 
+			from history_tb as h
+			left join account_tb as wa
+			on h.w_account_id = wa.id
+			left join account_tb as da
+			on h.d_account_id = da.id
+			where h.w_account_id = #{id} 
+		</if>
+		<if test="type == 'all' " >
+			select h.id, h.amount, h.created_at,
+			case when h.w_account_id = #{id} then (h.w_balance)
+				 when h.d_account_id = #{id} then (h.d_balance)
+			     end as balance,
+			     ifnull(wa.number, 'ATM') as sender, 
+			     ifnull(da.number, 'ATM') as receiver
+			from history_tb as h
+			left join account_tb as da
+			on h.d_account_id = da.id
+			left join account_tb as wa 
+			on h.w_account_id = wa.id
+			where h.d_account_id = #{id} or h.w_account_id = #{id}
+		</if>
+	
+	</select>
+		
 	<insert id="insert"
 		parameterType="com.tencoding.bank.repository.model.History">
 		insert into

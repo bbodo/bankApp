@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tencoding.bank.dto.DepositFormDto;
+import com.tencoding.bank.dto.HistoryDto;
 import com.tencoding.bank.dto.SaveFormDto;
 import com.tencoding.bank.dto.TransferFromDto;
 import com.tencoding.bank.dto.WithdrawFormDto;
@@ -217,7 +219,7 @@ public class AccountController {
 	// 2. 입금 계좌 번호 입력 여부 확인
 	// 3. 출금 계좌 비밀번호 입력 여부 확인
 	// 4. 이체금액 0원 이상 입력 여부 확인
- 
+
 	@PostMapping("/transfer")
 	public String transferProc(TransferFromDto transferFromDto) {
 		// 1. 인증 검사
@@ -238,10 +240,10 @@ public class AccountController {
 		if(transferFromDto.getAmount() <= 0) {
 			throw new CustomRestfullException("이체 금액이 0원 이하일 수 없습니다.", HttpStatus.BAD_REQUEST);
 		}
-//		if(transferFromDto.getWAccountPassword() == null ||
-//				transferFromDto.getWAccountPassword().isEmpty()) {
-//			throw new CustomRestfullException("출금 계좌 번호의 비밀번호를 입력하시오", HttpStatus.BAD_REQUEST);
-//		}											
+		//		if(transferFromDto.getWAccountPassword() == null ||
+		//				transferFromDto.getWAccountPassword().isEmpty()) {
+		//			throw new CustomRestfullException("출금 계좌 번호의 비밀번호를 입력하시오", HttpStatus.BAD_REQUEST);
+		//		}											
 		// 3. 서비스 호출
 		accountService.updateAccountTransfer(transferFromDto, user.getId());
 
@@ -253,13 +255,29 @@ public class AccountController {
 
 
 
-	// TODO - 수정하기
-	// 상세보기 페이지
-	// http://localhost:0/account/detail
-	@GetMapping("/detail")
-	public String detail() {
+	// 상세 보기 페이지 
+	// http://localhost/account/detail/1?type=all,deposit,withdraw 
+	@GetMapping("/detail/{id}")
+	public String detail(@PathVariable Integer id,
+			@RequestParam(name = "type", 
+			defaultValue = "all", required = false) String type, Model model) {
+		// Todo - 주소 설계 추가 하기
+
+		// 1. 인증 검사 
+		User user = (User)session.getAttribute(Define.PRINCIPAL);
+		if(user == null) {
+			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
+		}
+
+		// 서비스 호출
+		Account account = accountService.readAccount(id);
+		List<HistoryDto> historyList = accountService.readHistoryListByAccount(id, type);
+		model.addAttribute("principal", user);
+		model.addAttribute("account", account);	
+		model.addAttribute("historyList", historyList);
+
+
 		return "account/detail";
 	}
-
 
 }
