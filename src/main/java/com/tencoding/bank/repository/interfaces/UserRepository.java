@@ -18,7 +18,7 @@ public interface UserRepository {
 	public int deleteById(User user);
 	public User findById(Integer id);
 	public User findByUsernameAndPassword(SignInFormDto signInFormDto);
-	//관리자
 	public List<User> findAll();
+	public User findByUsername(String username);
 	
 }

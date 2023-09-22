@@ -37,13 +37,11 @@ public class AccountController {
 	private AccountService accountService;
 
 	// 계좌 목록 페이
+	//  http://localhost/account/list
 	@GetMapping("/list")
 	public String list(Model model) {
-		// 1. 인증 여부 확인
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
+		User user = (User)session.getAttribute(Define.PRINCIPAL);
 
 		List<Account> accountList = accountService.readAccountList(user.getId());
 		if(accountList.isEmpty()) {
@@ -62,11 +60,7 @@ public class AccountController {
 	 */
 	@GetMapping("/save")
 	public String save() {
-		// 1. 인증 여부 확인
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 
 		return "account/save";
 	}
@@ -77,11 +71,7 @@ public class AccountController {
 	 */
 	@PostMapping("/save")
 	public String saveProc(SaveFormDto saveFormDto) {
-		// 1. 인증 검사
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 		// 2. 유효성 검사
 		if(saveFormDto.getNumber() == null ||
 				saveFormDto.getNumber().isEmpty() ) {
@@ -97,6 +87,8 @@ public class AccountController {
 				saveFormDto.getBalance() < 0) {
 			throw new CustomRestfullException("잘못된 입력이다", HttpStatus.BAD_REQUEST);
 		}
+		
+		User user = (User)session.getAttribute(Define.PRINCIPAL);
 
 		// 서비스 호출
 		accountService.createAccount(saveFormDto, user.getId());
@@ -114,11 +106,7 @@ public class AccountController {
 	// http://localhost:80/account/withdraw
 	@GetMapping("/withdraw")
 	public String withdraw() {
-		// 1. 인증 여부 확인
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 		return "account/withdraw";
 	}
 
@@ -130,11 +118,8 @@ public class AccountController {
 	// body -> String -> amount = 1000&AccountId=10/.....
 	@PostMapping("/withdraw")
 	public String withdrawProc(WithdrawFormDto withdrawFormDto) {
-		// 1. 인증 검사
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
+		
 		// 2. 유효성 검사
 		if(withdrawFormDto.getAmount() == null) {
 			throw new CustomRestfullException("금액을 입력하시오",HttpStatus.BAD_REQUEST);
@@ -150,7 +135,9 @@ public class AccountController {
 				withdrawFormDto.getWAccountPassword().isEmpty()) {
 			throw new CustomRestfullException("출급 계좌 비밀 번호를 입력 하시오.", HttpStatus.BAD_REQUEST);
 		}
-
+		
+		User user = (User)session.getAttribute(Define.PRINCIPAL);
+		
 		accountService.updateAccountWithdraw(withdrawFormDto, user.getId());
 
 
@@ -163,21 +150,12 @@ public class AccountController {
 	// http://localhost:0/account/deposit
 	@GetMapping("/deposit")
 	public String deposit() {
-		// 1. 인증 여부 확인
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
-		return "account/deposit";
+		return"account/deposit";
 	}
 
 	@PostMapping("/deposit")
 	public String depositProc(DepositFormDto depositFormDto) {
-		// 1. 인증 검사
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 		// 2. 유효성 검사	
 		if(depositFormDto.getAmount() == null ) {
 			throw new CustomRestfullException("금액을 입력해주세요", HttpStatus.BAD_REQUEST);
@@ -192,7 +170,8 @@ public class AccountController {
 			throw new CustomRestfullException("계좌 번호를 입력하세요", HttpStatus.BAD_REQUEST);
 		}
 
-
+		User user = (User)session.getAttribute(Define.PRINCIPAL);
+		
 		// 3. 서비스 호출
 		accountService.updateAccountDeposit(depositFormDto);
 
@@ -206,11 +185,7 @@ public class AccountController {
 	// http://localhost:0/account/transfer
 	@GetMapping("/transfer")
 	public String transfer() {
-		// 1. 인증 여부 확인
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 
 		return "account/transfer";
 	}
@@ -222,12 +197,7 @@ public class AccountController {
 
 	@PostMapping("/transfer")
 	public String transferProc(TransferFromDto transferFromDto) {
-		// 1. 인증 검사
-		// 1. 인증 검사
-		User user =(User) session.getAttribute(Define.PRINCIPAL);
-		if( user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 		// 2. 유효성 검사		
 		if(transferFromDto.getDAccountNumber() == null ||
 				transferFromDto.getDAccountNumber().isEmpty()) {
@@ -243,7 +213,9 @@ public class AccountController {
 		//		if(transferFromDto.getWAccountPassword() == null ||
 		//				transferFromDto.getWAccountPassword().isEmpty()) {
 		//			throw new CustomRestfullException("출금 계좌 번호의 비밀번호를 입력하시오", HttpStatus.BAD_REQUEST);
-		//		}											
+		//		}		
+		
+		User user = (User)session.getAttribute(Define.PRINCIPAL);
 		// 3. 서비스 호출
 		accountService.updateAccountTransfer(transferFromDto, user.getId());
 
@@ -263,11 +235,9 @@ public class AccountController {
 			defaultValue = "all", required = false) String type, Model model) {
 		// Todo - 주소 설계 추가 하기
 
-		// 1. 인증 검사 
+		
 		User user = (User)session.getAttribute(Define.PRINCIPAL);
-		if(user == null) {
-			throw new UnAuthorizedException("로그인 먼저 해요", HttpStatus.UNAUTHORIZED);
-		}
+		
 
 		// 서비스 호출
 		Account account = accountService.readAccount(id);
