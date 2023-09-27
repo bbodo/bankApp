@@ -13,14 +13,16 @@
             <div class="form-group">
                 <label for="username">username :</label>    
                 <input type="text" id="username" class="form-control" placeholder="Enter username" 
-                name="username" value="길동" >
+                name="username"  >
             </div>    
             <div class="form-group">
                 <label for="pwd">password :</label>    
                 <input type="password" class="form-control" id="pwd" placeholder="Enter password" 
-                name="password"  value="1234">
+                name="password"  >
             </div>    
             <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=735aacbb448560cb2d171cf2767889bb&redirect_uri=http://localhost:80/user/kakao/callback">
+            <img src="/images/kakao_login_small.png" width="74" height="38" alt=""></a>
         </form>
 
     </div>

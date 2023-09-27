@@ -76,4 +76,15 @@ public class UserService {
 		return userEntity;	
 	}
 	
+	/**
+	 * username 사용자 검색
+	 * @param username
+	 * @return User, null
+	 */
+	public User searchUsername(String username) {
+	  return userRepository.findByUsername(username);
+	}
+
+	
+	
 }
